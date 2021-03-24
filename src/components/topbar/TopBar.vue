@@ -10,8 +10,22 @@
     </div>
     <div class="top-bar" v-if="verifyUser">
       <div class="container">
+        <router-link :to="{ name: 'Home' }" class="top-bar-option"
+          >EVENTOS</router-link
+        >
+        <router-link
+          :to="{ name: 'EventosParticipantes' }"
+          class="top-bar-option"
+          >EVENTOS PARTICIPANTES</router-link
+        >
+        <router-link :to="{ name: 'ConvitesEventos' }" class="top-bar-option"
+          >CONVITES EVENTOS</router-link
+        >
+        <router-link :to="{ name: 'MeusEventos' }" class="top-bar-option"
+          >MEUS EVENTOS</router-link
+        >
         <a href="#" class="top-bar-option" @click="registerEvent()"
-          >Cadastrar Evento</a
+          >CADASTRAR EVENTO</a
         >
         <button class="top-bar-option btn" @click="logoff()">SAIR</button>
       </div>
@@ -57,9 +71,8 @@ export default {
 .top-bar .top-bar-option {
   color: #fff;
   text-decoration: none;
-  letter-spacing: 2px;
   font-size: 12px;
-  margin-right: 15px;
+  margin-right: 20px;
   transition: 0.5s;
   height: 30px;
 }
@@ -67,6 +80,8 @@ export default {
 .top-bar .top-bar-option.btn {
   border: 1px solid #fff;
   padding: 5px 10px;
+  letter-spacing: 2px;
+  margin-right: 0;
 }
 
 .top-bar .top-bar-option.btn:hover {

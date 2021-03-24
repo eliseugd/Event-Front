@@ -4,6 +4,7 @@ import axios from "axios";
 import cookie from "vue-cookie";
 import def from "@/../node_modules/axios/lib/defaults";
 import * as Account from "./Account";
+import FlashMessage from '@smartweb/vue-flash-message';
 // import bus from "@/utils/events/bus";
 
 export const CancelToken = () => {
@@ -49,19 +50,19 @@ export const connection = (options = {}) => {
         function(error) {
             if (error != "Cancel") {
                 //bus.$emit('close-blackmodal');
+                console.error(error);
 
-                // switch (error.response.status) {
-                //     case 401:
-                //         Account.lockScreen();
-                //         // bus.$emit('login-fail');
-                //         break;
-                //     case 400:
-                //         Account.lockScreen();
-                //         // bus.$emit('logoff');
-                //         break;
-                //     default:
-                //         console.error(error.response);
-                // }
+                switch (error.response.status) {
+                    case 401:
+                        Account.lockScreen();
+                        break;
+                    case 400:
+                        Account.logoff();
+                        // bus.$emit('logoff');
+                        break;
+                    default:
+                        console.error(error.response);
+                }
             }
 
             return Promise.reject(error);

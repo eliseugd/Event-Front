@@ -21,7 +21,6 @@
           v-model="password"
         />
       </div>
-      <span v-if="messageErro" class="col-12">Usuario ou senha inválido</span>
     </div>
     <template #modal-footer>
       <div>
@@ -40,7 +39,6 @@ export default {
     return {
       user: "",
       password: "",
-      messageErro: false,
     };
   },
   computed: {
@@ -72,26 +70,34 @@ export default {
               const token = response.data.token;
               const user = response.data.user;
 
+              this.flashMessage.success({
+                time: 5000,
+                title: "Login realizado com sucesso",
+                icon: true,
+              });
+
               Account.login(token, user);
             } else {
-              console.error(response);
-              this.showMessageError();
+              // console.error(response, response.status, response.error);
             }
           })
           .catch((error) => {
-            console.error(error);
-            this.showMessageError();
+            if (error.response.status == 401) {
+              this.flashMessage.error({
+                time: 5000,
+                title: "Login inválido",
+                message:
+                  "Usuário ou senha inválidos, verifique e tente novamente",
+              });
+            }
           });
       } else {
-        alert("Favor preencher Usuário e Senha");
+        this.flashMessage.info({
+          time: 5000,
+          title: "Dados incompletos",
+          message: "Favor preencher usuário e senha corretamente",
+        });
       }
-    },
-    showMessageError() {
-      var that = this;
-      this.messageErro = true;
-      setTimeout(function () {
-        that.messageErro = false;
-      }, 3000);
     },
   },
 };

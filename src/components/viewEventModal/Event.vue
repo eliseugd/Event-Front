@@ -1,5 +1,5 @@
 <template>
-  <b-modal id="modal-1" v-model="showModalRegisterEvent" title="Novo evento">
+  <b-modal id="modal-1" v-model="showModalEvent" title="Evento">
     <div class="row">
       <div class="col-md-12 form-group name">
         <label for="#input-name">Nome</label>
@@ -9,6 +9,7 @@
           id="input-name"
           class="form-control"
           v-model="dados.name"
+          disabled
         />
       </div>
       <div class="col-md-6 form-group date">
@@ -19,6 +20,7 @@
           id="input-date"
           class="form-control"
           v-model="dados.date"
+          disabled
         />
       </div>
       <div class="col-md-6 form-group category">
@@ -28,6 +30,7 @@
           id="input-category"
           class="form-control"
           v-model="dados.category"
+          disabled
         >
           <option value="">Selecionar</option>
           <option
@@ -48,10 +51,11 @@
           class="form-control"
           maxlength="255"
           v-model="dados.description"
+          disabled
         />
       </div>
     </div>
-    <div class="row border-top" style="padding-top: 10px">
+    <!-- <div class="row border-top" style="padding-top: 10px">
       <div class="col-md-12">
         <h3>Convidar usuários para o evento</h3>
       </div>
@@ -64,7 +68,11 @@
           v-model="user"
         >
           <option value="">Selecione</option>
-          <option :value="user.id" v-for="(user, index) in users" :key="index">
+          <option
+            :value="user.id"
+            v-for="(user, index) in activeUsers"
+            :key="index"
+          >
             {{ user.username }}
           </option>
         </select>
@@ -96,19 +104,15 @@
           </tbody>
         </table>
       </div>
-    </div>
+    </div> -->
     <template #modal-footer>
-      <div>
-        <b-button variant="primary" class="float-right" @click="registerEvent">
-          Registrar
-        </b-button>
-      </div>
+      <div></div>
     </template>
   </b-modal>
 </template>
 <script>
 import * as axios from "@/Axios.js";
-// import axios from "axios";
+import * as Account from "@/Account";
 export default {
   data() {
     return {
@@ -132,9 +136,21 @@ export default {
       type: Boolean,
       default: true,
     },
+    dados: {
+      default: null,
+    },
   },
   computed: {
-    showModalRegisterEvent: {
+    getUser: function () {
+      return JSON.parse(Account.getUser());
+    },
+    activeUsers: function () {
+      return this.users.filter(function (u) {
+        var user = JSON.parse(Account.getUser());
+        return u.id != user.id;
+      });
+    },
+    showModalEvent: {
       // getter
       get: function () {
         return this.showModal;
@@ -173,8 +189,18 @@ export default {
                   .then((response) => {
                     if (response.data.error == 0) {
                       that.$emit("eventRegisterSuccess");
+                      this.flashMessage.success({
+                        time: 5000,
+                        title: "Evento registrado com sucesso",
+                        icon: true,
+                      });
                     } else {
-                      console.log(response);
+                      this.flashMessage.warning({
+                        time: 5000,
+                        title: "Erro ao registrar CONVITES",
+                        message:
+                          "Ocorreu um erro ao tentar salvar os CONVITES do seu evento",
+                      });
                     }
                   })
                   .catch((error) => {
@@ -182,16 +208,35 @@ export default {
                   });
               } else {
                 that.$emit("eventRegisterSuccess");
+
+                this.flashMessage.success({
+                  time: 5000,
+                  title: "Evento registrado com sucesso",
+                  icon: true,
+                });
               }
             } else {
-              console.log(response);
+              this.flashMessage.error({
+                time: 5000,
+                title: "Erro ao registrar EVENTO",
+                message:
+                  "Ocorreu um erro ao registrar seu evento, tente novamente mais tarde ou entre em contato com o suporte",
+              });
             }
           })
           .catch((error) => {
-            console.error(error);
+            this.flashMessage.error({
+              time: 5000,
+              title: "Erro ao registrar EVENTO",
+              message:
+                "Ocorreu um erro ao registrar seu evento, tente novamente mais tarde ou entre em contato com o suporte",
+            });
           });
       } else {
-        alert("Preencha todos os campos");
+        this.flashMessage.info({
+          time: 5000,
+          title: "Preencha todos os campos",
+        });
       }
     },
     addUserInviteEvent() {

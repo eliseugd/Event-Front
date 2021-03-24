@@ -6,6 +6,12 @@
       @registerEvent="showModalRegisterEvent = true"
       class="top-bar"
     ></top-bar>
+    <FlashMessage
+      position="left top"
+      time="5000"
+      strategy="multiple"
+      group="hints"
+    ></FlashMessage>
     <!-- Modal para realizar Login -->
     <login-modal
       :showModal="showModalLogin"
@@ -41,10 +47,10 @@
 </template>
 
 <script>
-import TopBar from "@/components/topbar/Main.vue";
-import LoginModal from "@/components/loginModal/Main.vue";
-import RegisterModal from "@/components/registerModal/Main.vue";
-import RegisterEventModal from "@/components/registerEventModal/Main.vue";
+import TopBar from "@/components/topbar/TopBar.vue";
+import LoginModal from "@/components/loginModal/Login.vue";
+import RegisterModal from "@/components/registerModal/Register.vue";
+import RegisterEventModal from "@/components/registerEventModal/RegisterEvent.vue";
 
 export default {
   name: "App",
@@ -90,5 +96,21 @@ export default {
   position: fixed;
   top: 0;
   z-index: 100;
+}
+
+._vue-flash-msg-body {
+  z-index: 10000;
+  max-width: 300px;
+  right: 20px;
+  left: unset !important;
+}
+._vue-flash-msg-body ._vue-flash-msg-body__content {
+  padding: 10px;
+  font-size: 11px;
+}
+._vue-flash-msg-body ._vue-flash-msg-body__content .heading {
+  font-weight: 800;
+}
+._vue-flash-msg-body ._vue-flash-msg-body__content ._vue-flash-msg-body__text {
 }
 </style>

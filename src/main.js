@@ -9,6 +9,9 @@ import axios from 'axios'
 import VueAxios from 'vue-axios'
 Vue.use(VueAxios, axios)
 
+//Notification Message
+import FlashMessage from "@smartweb/vue-flash-message";
+Vue.use(FlashMessage);
 
 /* Start Configuration Bootstrap */
 import { BootstrapVue, IconsPlugin } from 'bootstrap-vue'

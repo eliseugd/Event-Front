@@ -1,5 +1,17 @@
+@import "./fonts.css";
+* {
+    font-family: 'Roboto';
+}
+
 section {
     padding: 20px 0;
+}
+
+h1,
+h2,
+h3,
+a {
+    font-family: 'Montserrat';
 }
 
 h1 {

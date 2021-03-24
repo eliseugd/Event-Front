@@ -2,7 +2,8 @@
   <div>
     <section class="row">
       <div class="col-12 title-component text-left">
-        <h2>Últimos eventos adicionados</h2>
+        <h2>Eventos</h2>
+        <span>Cadastre-se e participe!</span>
       </div>
       <tag-event
         v-for="(event, index) in events"
@@ -11,14 +12,15 @@
         :title="event.name"
         :description="event.description"
         :date="event.date"
-        textBtn="PARTICIPAR"
+        :textBtn="verifyUser ? 'PARTICIPAR' : ''"
       ></tag-event>
     </section>
   </div>
 </template>
 <script>
-import TagEvent from "@/components/tagEvent/Main.vue";
+import TagEvent from "@/components/tagEvent/TagEvent.vue";
 import * as axios from "@/Axios.js";
+import * as Account from "@/Account";
 export default {
   data() {
     return {
@@ -28,11 +30,18 @@ export default {
   components: {
     TagEvent,
   },
+  computed: {
+    verifyUser() {
+      return Account.isAuthenticated();
+    },
+  },
   methods: {
-    getLastEvents() {
+    getAllEvents() {
+      var url = this.verifyUser ? "/user-event/available" : "/events-available";
+
       axios
         .connection()
-        .post("/events-search/", { limit: 4 })
+        .get(url)
         .then((response) => {
           if (response) {
             this.events = response.data;
@@ -46,9 +55,16 @@ export default {
     },
   },
   created() {
-    this.getLastEvents();
+    this.getAllEvents();
   },
 };
 </script>
 <style scoped>
+.title-component h2 {
+  margin-bottom: 0;
+}
+.title-component span {
+  font-family: "Montserrat", sans-serif;
+  font-size: 12px;
+}
 </style>

@@ -1,17 +1,14 @@
 <template>
   <div>
-    <ultimos-eventos class="section"></ultimos-eventos>
-    <meus-eventos class="section" v-if="verifyUser"></meus-eventos>
+    <eventos class="section"></eventos>
   </div>
 </template>
 <script>
 import * as Account from "@/Account";
-import UltimosEventos from "@/components/ultimosEventos/Main.vue";
-import MeusEventos from "@/components/relacaoMeusEventos/Main.vue";
+import Eventos from "@/components/todosEventos/Eventos.vue";
 export default {
   components: {
-    UltimosEventos,
-    MeusEventos,
+    Eventos,
   },
   computed: {
     verifyUser() {

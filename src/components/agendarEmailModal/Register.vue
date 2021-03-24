@@ -1,5 +1,6 @@
 <template>
   <b-modal id="modal-1" v-model="showModalRegister" title="Registrar">
+    <!-- <flash-message class="myCustomClass"></flash-message> -->
     <div class="row">
       <div class="col-md-12 form-group user">
         <label for="#input-user">Usuário</label>
@@ -127,9 +128,37 @@ export default {
           .post("/user-register/", this.dados)
           .then((response) => {
             if (response.data.error == 0) {
+              this.flashMessage.success({
+                time: 5000,
+                title: "Usuário cadastrado com SUCESSO",
+                message:
+                  "Seu usuário foi cadastrado com sucesso, faça login para continuar",
+              });
               this.$emit("userCreatedSuccess");
             } else {
-              console.log(response);
+              var messageError = response.data.message;
+              if (messageError.includes("username_unique", 0)) {
+                this.flashMessage.error({
+                  time: 5000,
+                  title: "Usuário já cadastrado",
+                  message:
+                    "O usuário que você deseja cadastrar é inválido pois outra pessoa já o cadastrou, tente outro por favor.",
+                });
+              } else if (messageError.includes("email_unique", 0)) {
+                this.flashMessage.error({
+                  time: 5000,
+                  title: "E-mail já cadastrado",
+                  message:
+                    "Este e-mail já esta cadastrado em outro usuário, informe outro por favor",
+                });
+              } else {
+                this.flashMessage.error({
+                  time: 5000,
+                  title: "Erro",
+                  message:
+                    "Ocorreu um erro, tente novamente mais tarde ou entre em contato com nosso suporte",
+                });
+              }
             }
           })
           .catch((error) => {
